@@ -3,6 +3,7 @@ import random
 from discord.ext import tasks
 from datetime import datetime
 
+TOKEN = "MTMxMzA2ODU4MDMxNjkwNTUwMw.GSGjMe.8aJpi9HzP9r1V2JvUtnhL7khm_SG-ClwOvUaqg"
 client = discord.Client()
 
 # アバター画像のURLリストを設定

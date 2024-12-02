@@ -1,20 +1,23 @@
 import discord
+import random
 from discord.ext import tasks
 from datetime import datetime
 
-TOKEN = 'YOUR_BOT_TOKEN'
 client = discord.Client()
 
-# 曜日ごとのアバター画像のURLを設定
-avatars = {
-    0: 'url_for_sunday_avatar',
-    1: 'url_for_monday_avatar',
-    2: 'url_for_tuesday_avatar',
-    3: 'url_for_wednesday_avatar',
-    4: 'url_for_thursday_avatar',
-    5: 'url_for_friday_avatar',
-    6: 'url_for_saturday_avatar'
-}
+# アバター画像のURLリストを設定
+avatars = [
+    'IMG_1100.JPG',
+    'IMG_1101.JPG',
+    'IMG_1103.JPG',
+    'IMG_1105.JPG',
+    'IMG_1106.JPG',
+    'IMG_1109.JPG',
+    'IMG_1110.JPG'
+]
+
+# 前日のアバターを保持する変数
+previous_avatar = None
 
 @client.event
 async def on_ready():
@@ -23,10 +26,19 @@ async def on_ready():
 
 @tasks.loop(hours=24)
 async def change_avatar():
-    now = datetime.now()
-    day_of_week = now.weekday()  # 0=月曜日, 6=日曜日
-    avatar_url = avatars[day_of_week]
-    with open(avatar_url, 'rb') as avatar:
+    global previous_avatar
+
+    # 前日のアバターを除外したリストを作成
+    available_avatars = [avatar for avatar in avatars if avatar != previous_avatar]
+
+    # ランダムにアバターを選択
+    new_avatar = random.choice(available_avatars)
+
+    # アバターを変更
+    with open(new_avatar, 'rb') as avatar:
         await client.user.edit(avatar=avatar.read())
+
+    # 前日のアバターを更新
+    previous_avatar = new_avatar
 
 client.run(TOKEN)
